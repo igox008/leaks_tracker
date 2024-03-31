@@ -8,8 +8,13 @@
 
 static inline void* __malloc(size_t size, const char* file, int line)
 {
+	static int i;
 	int fd = open("adrress_logs.py", O_CREAT | O_RDWR, 0644);
-	FILE *log = fopen("adrress_logs.py", "a");
+	FILE *log;
+	if (!i)
+		log = fopen("adrress_logs.py", "w");
+	else
+		log = fopen("adrress_logs.py", "a");
     void* ptr = malloc(size);
     if (ptr != NULL)
         fprintf(log,"Memory allocated at address: %p, file: %s, line: %d\n", ptr, file, line);
@@ -17,16 +22,24 @@ static inline void* __malloc(size_t size, const char* file, int line)
         fprintf(log, "Failed to allocate memory at file: %s, line: %d\n", file, line);
 	fclose(log);
 	close(fd);
+	i++;
     return ptr;
 }
 
 static inline void __free(void *ptr, const char* file, int line)
 {
+	static int i;
+	free(ptr);
 	int fd = open("adrress_logs.py", O_CREAT | O_RDWR, 0644);
-	FILE *log = fopen("adrress_logs.py", "a");
+	FILE *log;
+	if (!i)
+		log = fopen("adrress_logs.py", "w");
+	else
+		log = fopen("adrress_logs.py", "a");
 	fprintf(log,"Memory freed from address: %p, file: %s, line: %d\n", ptr, file, line);
 	fclose(log);
 	close(fd);
+	i++;
 }
 
 #ifndef malloc
