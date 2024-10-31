@@ -1,8 +1,8 @@
 #!/bin/bash
 
 rm -f adrress_logs.py
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <executable_name>"
+if [ "$#" -eq 0 ]; then
+    echo "Usage: $0 <executable_name> <param 1> <param 2> ..."
     exit 1
 fi
 
@@ -13,7 +13,8 @@ if [ ! -x "$executable" ]; then
     exit 1
 fi
 
-./"$executable"
+shift
+./"$executable" $@
 
 addresses=()
 
