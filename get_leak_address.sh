@@ -24,12 +24,12 @@ done < <(cat adrress_logs.py | grep alloca | sort | uniq | awk '{print $5}' | aw
 
 n=0
 for address in "${addresses[@]}"; do
-  count1=$(cat adrress_logs.py | grep allocated | wc -l)
-  count2=$(cat adrress_logs.py | grep freed | wc -l)
-  if (( $count1 > $count2)); then
+  count1=$(cat adrress_logs.py | grep allocated | grep $address | wc -l)
+  count2=$(cat adrress_logs.py | grep freed | grep $address | wc -l)
+  if (( $count1 != $count2)); then
     location=$(cat adrress_logs.py | grep $address | grep allocated | sort | uniq)
     echo "$location"
     ((n++))
   fi
 done
-echo $n
+echo "leaks count : " $n
